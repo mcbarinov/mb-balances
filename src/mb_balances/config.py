@@ -1,8 +1,8 @@
 """Config models for mb-balances."""
 
-from typing import Literal
+from typing import Literal, NoReturn
 
-from mm_clikit import TomlConfig
+from mm_clikit import TomlConfig, print_toml
 from pydantic import BaseModel, Field
 
 
@@ -89,3 +89,8 @@ class Config(TomlConfig):
 
     settings: Settings = Settings()
     """Global display and behavior settings."""
+
+    def print_and_exit(self, *, exclude: set[str] | None = None) -> NoReturn:
+        """Print config as formatted TOML (omitting null fields) and exit(0)."""
+        print_toml(self.model_dump(exclude=exclude, exclude_none=True))
+        raise SystemExit(0)
